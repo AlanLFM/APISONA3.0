@@ -36,8 +36,18 @@ const storage=multer.diskStorage({
       cb(null, req.body.name)
   }//antes file.originalname
 });
+const storage2=multer.diskStorage({
+  destination:(req, file, cb)=>{
+    cb(null,"pdf")
+  },
+  filename:(req, file, cb)=>{
+    cb(null, req.body.name)
+  }
+
+})
 const upload = multer({ storage: storage });
 const upload2=multer()
+const upload3=multer({storage: storage2})
 
 
 app.post("/extract-text", upload2.array("pdfFile"), (req, res) => {
@@ -74,6 +84,15 @@ app.post('/upload', upload.single("file"), (req, res) => {
   }
 });
 
+app.post('/upload2', upload3.single("file"), (req, res) => {
+  try {
+    console.log(req);
+    res.status(200).json("Archivo guardado correctamente");
+  } catch (error) {
+    console.log(error);
+    res.send(400);
+  }
+});
 app.use("/api/users", userRoute)
 app.use("/api/auth", authRoute)
 app.use("/api/posts", postRoute)
