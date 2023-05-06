@@ -1,0 +1,16 @@
+{
+    "routes":[
+      {
+        "src":"/api/users",
+        "dest":"http://localhost:9000/api/users"
+      },
+      {
+        "src": "/api/auth",
+        "dest":"http://localhost:9000/api/auth"
+      },
+      {
+        "src": "/api/posts",
+        "dest": "http://localhost:9000/api/posts"
+      }
+    ]
+    }
