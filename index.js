@@ -9,8 +9,10 @@ const authRoute=require("./routes/auth.js")
 const postRoute=require("./routes/posts.js");
 const conversationtRoute=require("./routes/conversations.js");
 const messageRoute=require("./routes/messages.js");
+const PdfRequestCount=require("./routes/PdfRequestCount.js")
 const cors =require("cors");
-const path=require("path")
+const path=require("path");
+const fs=require("fs")
 const multer=require("multer")
 const pdfParse=require("pdf-parse");
 app.use(cors())
@@ -21,7 +23,19 @@ app.use("/pdf", express.static('pdf'));
 dotenv.config()
 
 mongoose.connect(process.env.MONGO_URL, {useUnifiedTopology:true, useNewUrlParser: true});
+app.get('/files', (req, res) => {
+  const folderPath = path.join(__dirname, 'pdf');
 
+  fs.readdir(folderPath, (err, files) => {
+    if (err) {
+      console.error('Error al leer el contenido de la carpeta:', err);
+      res.status(500).send('Error al leer el contenido de la carpeta');
+      return;
+    }
+
+    res.send(files);
+  });
+});
 //middleware
 app.use(express.json());
 app.use(helmet());
@@ -51,21 +65,17 @@ const upload3=multer({storage: storage2})
 
 
 app.post("/extract-text", upload2.array("pdfFile"), (req, res) => {
-  // Verifica si hay archivos en la solicitud
   if (!req.files) {
     res.status(400);
     res.end();
   }
 
-  // Procesa cada archivo PDF y extrae el texto
   const extractedTextPromises = req.files.map((pdfFile) =>
     pdfParse(pdfFile.buffer)
   );
 
-  // Espera a que todos los archivos PDF sean procesados
   Promise.all(extractedTextPromises)
     .then((results) => {
-      // Envía un arreglo con el texto extraído de cada archivo PDF
       res.send(results.map((result) => result.text));
     })
     .catch((error) => {
@@ -98,6 +108,8 @@ app.use("/api/auth", authRoute)
 app.use("/api/posts", postRoute)
 app.use("/api/conversations", conversationtRoute)
 app.use("/api/messages", messageRoute)
+app.use("/api/pdfCount", PdfRequestCount)
+
 
 const PORT =process.env.PORT || 9000;
 
