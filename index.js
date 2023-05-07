@@ -103,6 +103,34 @@ app.post('/upload2', upload3.single("file"), (req, res) => {
     res.send(400);
   }
 });
+
+app.delete('/delete-file', (req, res) => {
+  try {
+    // Asegúrate de validar y desinfectar el nombre del archivo en una aplicación real.
+    const fileName = req.body.fileName; // Debes enviar el nombre del archivo en el cuerpo de la petición.
+
+    // Asegúrate de construir la ruta correcta al archivo que deseas eliminar.
+    const filePath = path.join(__dirname, 'pdf', fileName);
+
+    fs.unlink(filePath, (error) => {
+      if (error) {
+        console.error('Error al eliminar el archivo:', error);
+        res.status(500).json({ error: 'No se pudo eliminar el archivo.' });
+      } else {
+        console.log('Archivo eliminado correctamente:', fileName);
+        res.status(200).json({ message: 'Archivo eliminado correctamente.' });
+      }
+    });
+  } catch (error) {
+    console.error('Error en la petición de eliminación de archivo:', error);
+    res.status(400).json({ error: 'Error en la petición.' });
+  }
+});
+
+
+
+
+
 app.use("/api/users", userRoute)
 app.use("/api/auth", authRoute)
 app.use("/api/posts", postRoute)
