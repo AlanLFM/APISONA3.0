@@ -3,6 +3,12 @@ const app=express();
 const morgan=require("morgan");
 const mongoose = require('mongoose');
 const dotenv=require("dotenv");
+const cors =require("cors");
+const http=require("http")
+app.use(cors())
+
+
+
 const { default: helmet } = require("helmet");
 const userRoute=require("./routes/users.js")
 const authRoute=require("./routes/auth.js")
@@ -10,12 +16,14 @@ const postRoute=require("./routes/posts.js");
 const conversationtRoute=require("./routes/conversations.js");
 const messageRoute=require("./routes/messages.js");
 const PdfRequestCount=require("./routes/PdfRequestCount.js")
-const cors =require("cors");
 const path=require("path");
 const fs=require("fs")
 const multer=require("multer")
 const pdfParse=require("pdf-parse");
-app.use(cors())
+const server=http.createServer(app);
+
+
+
 
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use("/pdf", express.static('pdf'));
@@ -106,12 +114,8 @@ app.post('/upload2', upload3.single("file"), (req, res) => {
 
 app.delete('/delete-file', (req, res) => {
   try {
-    // Asegúrate de validar y desinfectar el nombre del archivo en una aplicación real.
-    const fileName = req.body.fileName; // Debes enviar el nombre del archivo en el cuerpo de la petición.
-
-    // Asegúrate de construir la ruta correcta al archivo que deseas eliminar.
+    const fileName = req.body.fileName;
     const filePath = path.join(__dirname, 'pdf', fileName);
-
     fs.unlink(filePath, (error) => {
       if (error) {
         console.error('Error al eliminar el archivo:', error);
@@ -129,8 +133,6 @@ app.delete('/delete-file', (req, res) => {
 
 
 
-
-
 app.use("/api/users", userRoute)
 app.use("/api/auth", authRoute)
 app.use("/api/posts", postRoute)
@@ -141,6 +143,7 @@ app.use("/api/pdfCount", PdfRequestCount)
 
 const PORT =process.env.PORT || 9000;
 
-app.listen(PORT, ()=>{
-    console.log("Corriendo en el 9000");
+server.listen(PORT, ()=>{
+  console.log(`Corriendo en el puerto: ${PORT}`);
 })
+
