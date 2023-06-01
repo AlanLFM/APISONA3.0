@@ -8,7 +8,6 @@ const http=require("http")
 app.use(cors())
 
 
-
 const { default: helmet } = require("helmet");
 const userRoute=require("./routes/users.js")
 const authRoute=require("./routes/auth.js")

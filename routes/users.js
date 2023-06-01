@@ -43,7 +43,7 @@ router.delete("/:id", async(req,res)=>{
             return res.status(500).json(err);
         }
     }else{
-        return res.status(403).json("Sólo puedes eliminiar tu cuenta")
+        return res.status(403).json("Sólo puedes eliminar tu cuenta")
     }
 })
 
