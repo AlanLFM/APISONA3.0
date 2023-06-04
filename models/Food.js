@@ -2,15 +2,19 @@ const mongoose=require("mongoose")
 const FoodSchema=new mongoose.Schema(
     {
         foodId:{
-            type:String,
+            type:Number,
             required:true
         },
         comida:{
             type:String,
             required:true
         },
+        img:{
+            type:String,
+            default: ""
+        },
         precio:{
-            type:Int,
+            type: Number,
             required:true
         },
         desc:{

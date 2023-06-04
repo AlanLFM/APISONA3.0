@@ -10,6 +10,7 @@ app.use(cors())
 
 const { default: helmet } = require("helmet");
 const userRoute=require("./routes/users.js")
+const food=require("./routes/food.js")
 const authRoute=require("./routes/auth.js")
 const postRoute=require("./routes/posts.js");
 const conversationtRoute=require("./routes/conversations.js");
@@ -138,7 +139,7 @@ app.use("/api/posts", postRoute)
 app.use("/api/conversations", conversationtRoute)
 app.use("/api/messages", messageRoute)
 app.use("/api/pdfCount", PdfRequestCount)
-
+app.use("/api/food", food)
 
 const PORT =process.env.PORT || 9000;
 
